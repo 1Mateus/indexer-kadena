@@ -1,0 +1,6 @@
+schema: ./src/kadena-server/config/schema.graphql
+generates:
+  ./src/kadena-server/config/graphql-types.ts: # Output path for the generated types
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"

@@ -11,6 +11,7 @@ import { getRequiredEnvString } from "./utils/helpers";
 import { startStreaming } from "./services/sync/streaming";
 import { processS3HeadersDaemon } from "./services/sync/header";
 import { usePostgraphile } from "./server/metrics";
+import { useKadenaGraphqlServer } from "./kadena-server/server";
 
 program
   .option("-s, --streaming", "Start streaming blockchain data")
@@ -19,6 +20,7 @@ program
   .option("-m, --missing", "Process missing blocks")
   .option("-h, --headers", "Process headers from s3 bucket to database")
   .option("-g, --graphql", "Start the GraphQL server")
+  .option("-t, --graphqlServer", "Start the custom GraphQL server")
   .option(
     "-run, --run",
     "Continuous process of streaming, headers, payloads and missing blocks from node to s3 bucket and from s3 bucket to database"
@@ -53,6 +55,8 @@ async function main() {
       await processS3HeadersDaemon(SYNC_NETWORK);
     } else if (options.graphql) {
       await usePostgraphile();
+    } else if (options.graphqlServer) {
+      await useKadenaGraphqlServer();
     } else if (options.run) {
       if (process.env.RUN_GRAPHQL_ON_START === "true") {
         await usePostgraphile();

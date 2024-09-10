@@ -2,6 +2,21 @@ const fs = require("fs");
 
 import { Sequelize } from "sequelize";
 
+import { getRequiredEnvString } from "../utils/helpers";
+import path from "path";
+import { Pool } from "pg";
+
+const DB_USERNAME = getRequiredEnvString("DB_USERNAME");
+const DB_PASSWORD = getRequiredEnvString("DB_PASSWORD");
+const DB_NAME = getRequiredEnvString("DB_NAME");
+const DB_HOST = getRequiredEnvString("DB_HOST");
+const SSL_CERT_PATH = path.resolve(__dirname, "../config/global-bundle.pem");
+const DB_CONNECTION = `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}?ssl=true&&sslrootcert=${SSL_CERT_PATH}`;
+
+export const rootPgPool = new Pool({
+  connectionString: DB_CONNECTION,
+});
+
 export const sequelize = new Sequelize(
   process.env.DB_NAME as string,
   process.env.DB_USERNAME as string,
